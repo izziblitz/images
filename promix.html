@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  padding: 30px;
+}
+
+h2 {
+  color: #303030;
+}
+
+form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+select, input[type="button"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="button"] {
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+}
+
+input[type="button"]:hover {
+  background-color: #45a049;
+}
+
+#output {
+  margin-top: 20px;
+}
+
+.promo {
+  font-size: 1.5em;
+  color: #4CAF50;
+}
+
+.terms {
+  font-size: 0.8em;
+  color: #444;
+  margin-top: 20px;
+}
+
+.resultItem {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.resultValue {
+  font-weight: bold;
+}
+
+</style>
+</head>
+<body>
+
+<h2>2023 Promo Calculator</h2>
+
+<form>
+  Select Home Price:
+  <select id="homePrice">
+    <option value="700000">700,000</option>
+    <option value="900000">900,000</option>
+    <option value="1200000">1,200,000</option>
+    <option value="2000000">2,000,000</option>
+    <option value="5000000">5,000,000</option>
+    <option value="10000000">10,000,000</option>
+  </select>
+  <input type="button" value="Calculate" onclick="calculateCommission()">
+</form>
+
+<div id="output"></div>
+
+<p class="terms">
+  <strong>Terms and Conditions:</strong> This promotional cashback offer is a generic calculator and does not guarantee the final amount you will receive. The final cashback amount is subject to the sale and purchase price, as well as the conditions of the Real Estate deal. Cashback will only be provided after the agent's commission is paid. This offer may be modified or terminated at any time without notice. To qualify for this offer, it must be accepted within three months of hiring the agent.
+</p>
+
+
+<script>
+function calculateCommission() {
+  var homePrice = document.getElementById("homePrice").value;
+
+  var commissionFirst100k = 100000 * 3.2 / 100;
+  var commissionRest = (homePrice - 100000) * 1.16 / 100;
+
+  var totalCommission = commissionFirst100k + commissionRest;
+
+  var costs = totalCommission * 10 / 100 + 300;
+
+  var profitBeforePromo = totalCommission - costs;
+
+  var cashBack = profitBeforePromo * 50 / 100;
+
+  var profitAfterPromo = profitBeforePromo - cashBack;
+
+  var output = document.getElementById("output");
+
+  output.innerHTML = "";
+
+  var results = [
+    ["Agent Commission before cost and Promo", totalCommission.toFixed(2)],
+    ["Agent Costs", costs.toFixed(2)],
+    ["Agents Commission before promo", profitBeforePromo.toFixed(2)],
+    ["Promo Cashback", cashBack.toFixed(2), true],  // Adding a flag to denote the promo class
+    ["Agent Gets", profitAfterPromo.toFixed(2)]
+  ];
+
+  results.forEach(function(item){
+    var resultItem = document.createElement("div");
+    resultItem.classList.add("resultItem");
+
+    var itemName = document.createElement("span");
+    itemName.textContent = item[0] + ": ";
+
+    var itemValue = document.createElement("span");
+    itemValue.textContent = "$" + item[1].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    itemValue.classList.add("resultValue");
+
+    // If the flag is true, add the 'promo' class
+    if (item[2]) {
+      itemValue.classList.add("promo");
+    }
+
+    resultItem.appendChild(itemName);
+    resultItem.appendChild(itemValue);
+
+    output.appendChild(resultItem);
+  });
+}
+</script>
+</body>
+</html>
